@@ -10,10 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4.2.1
       
     - name: Cache apt packages
       uses: actions/cache@v4.1.1
@@ -24,6 +23,7 @@ jobs:
         key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}
         restore-keys: |
           ${{ runner.os }}-apt-
+        continue-on-error: true
 
     - name: Install GUI Dependency & Locales
       run: |
