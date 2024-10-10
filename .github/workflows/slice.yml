@@ -16,14 +16,13 @@ jobs:
       
     - name: Verify and set permissions
       run: |
-        sudo chown -R $USER:$USER /var/cache/lib/apt/lists
-        sudo chown -R $USER:$USER /var/cache/apt/archives
         
     - name: Cache apt packages
       uses: actions/cache@v4.1.1
+      id: apt-cache
       with:
         path: |
-          /var/cache/lib/apt/lists
+          /var/lib/apt/lists
           /var/cache/apt/archives
         key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}
         restore-keys: |
@@ -32,13 +31,22 @@ jobs:
 
     - name: Install GUI Dependency & Locales
       run: |
+        if [ -d "/var/lib/apt/lists" ]
+          sudo mkdir /var/lib/apt/lists
+        fi
+        if [ -d "/var/cache/apt/archives" ]
+          sudo mkdir /var/cache/apt/archives
+        fi
         if [ -f "/var/lib/apt/lists/lock" ]; then
           sudo rm /var/lib/apt/lists/lock
         fi
         if [ -f "/var/cache/apt/archives/lock" ]; then
           sudo rm /var/cache/apt/archives/lock
         fi
+        if [ "${{ steps.apt-cache.outputs.cache-hit }}" != "true" ]; then
         echo "Installing GUI Dependencies & locales..."
+        sudo chown -R $USER:$USER /var/lib/apt/lists
+        sudo chown -R $USER:$USER /var/cache/apt/archives
         sudo apt-get update
         sudo apt-get install -y \
           locales \
@@ -68,6 +76,7 @@ jobs:
           at-spi2-core \
           dbus-x11 \
           imagemagick
+        fi
 
     - name: Configure locales
       run: |
