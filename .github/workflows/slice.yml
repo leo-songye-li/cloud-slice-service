@@ -3,94 +3,97 @@ name: cloud-slice-v1
 on:
   workflow_dispatch:
     inputs:
-      auth-token:
-        description: '上传用户的token'
+      upload-token:
+        description: "用于获取预签名的key"
         required: false
+      slice-file:
+        description: "需要云切片的文件名"
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+    # - name: Checkout repository
+    #   uses: actions/checkout@v4.2.1
         
-    - name: Cache apt packages
-      uses: actions/cache@v4.1.1
-      id: apt-cache
-      with:
-        path: |
-          /var/lib/apt/lists
-        key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-apt-
-        continue-on-error: true
+    # - name: Cache apt packages
+    #   uses: actions/cache@v4.1.1
+    #   id: apt-cache
+    #   with:
+    #     path: |
+    #       /var/lib/apt/lists
+    #     key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-apt-
+    #     continue-on-error: true
         
-    - name: Install GUI Dependency & Locales
-      run: |
-        echo "authToken=${{ github.event.inputs.auth-token }}"
-        if [ "${{ steps.apt-cache.outputs.cache-hit }}" != "true" ]; then
-        echo "Installing GUI Dependencies & locales..."
-        sudo apt-get update
-        sudo apt-get install -y \
-          locales \
-          libgl1-mesa-glx \
-          libglu1-mesa \
-          libx11-6 \
-          libxext6 \
-          libxrender1 \
-          libxi6 \
-          libxtst6 \
-          libxt6 \
-          libxfixes3 \
-          libxrandr2 \
-          libasound2 \
-          libpango1.0-0 \
-          libatk1.0-0 \
-          libgtk-3-0 \
-          libgstreamer1.0-0 \
-          gstreamer1.0-plugins-base \
-          gstreamer1.0-plugins-good \
-          gstreamer1.0-plugins-bad \
-          gstreamer1.0-plugins-ugly \
-          libfuse-dev \
-          libegl1 \
-          libwebkit2gtk-4.0-37 \
-          xvfb \
-          at-spi2-core \
-          dbus-x11 \
-          imagemagick
-        fi
+    # - name: Install GUI Dependency & Locales
+    #   run: |
+    #     echo "authToken=${{ github.event.inputs.auth-token }}"
+    #     if [ "${{ steps.apt-cache.outputs.cache-hit }}" != "true" ]; then
+    #     echo "Installing GUI Dependencies & locales..."
+    #     sudo apt-get update
+    #     sudo apt-get install -y \
+    #       locales \
+    #       libgl1-mesa-glx \
+    #       libglu1-mesa \
+    #       libx11-6 \
+    #       libxext6 \
+    #       libxrender1 \
+    #       libxi6 \
+    #       libxtst6 \
+    #       libxt6 \
+    #       libxfixes3 \
+    #       libxrandr2 \
+    #       libasound2 \
+    #       libpango1.0-0 \
+    #       libatk1.0-0 \
+    #       libgtk-3-0 \
+    #       libgstreamer1.0-0 \
+    #       gstreamer1.0-plugins-base \
+    #       gstreamer1.0-plugins-good \
+    #       gstreamer1.0-plugins-bad \
+    #       gstreamer1.0-plugins-ugly \
+    #       libfuse-dev \
+    #       libegl1 \
+    #       libwebkit2gtk-4.0-37 \
+    #       xvfb \
+    #       at-spi2-core \
+    #       dbus-x11 \
+    #       imagemagick
+    #     fi
 
-    - name: Configure locales
-      run: |
-        sudo locale-gen en_GB.UTF-8
-        sudo dpkg-reconfigure locales
+    # - name: Configure locales
+    #   run: |
+    #     sudo locale-gen en_GB.UTF-8
+    #     sudo dpkg-reconfigure locales
 
-    - name: Start Xvfb
-      run: |
-        Xvfb :99 -screen 0 1024x768x24 &
-        echo "DISPLAY=:99" >> $GITHUB_ENV
+    # - name: Start Xvfb
+    #   run: |
+    #     Xvfb :99 -screen 0 1024x768x24 &
+    #     echo "DISPLAY=:99" >> $GITHUB_ENV
 
-    - name: Setup Xauthority
-      run: |
-        touch $HOME/.Xauthority
-        xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
+    # - name: Setup Xauthority
+    #   run: |
+    #     touch $HOME/.Xauthority
+    #     xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
 
-    - name: Start AT-SPI Registry
-      run: |
-        echo "Starting AT-SPI Registry"
-        export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
-        dbus-launch --exit-with-session
-        echo "AT-SPI Registry started"
+    # - name: Start AT-SPI Registry
+    #   run: |
+    #     echo "Starting AT-SPI Registry"
+    #     export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
+    #     dbus-launch --exit-with-session
+    #     echo "AT-SPI Registry started"
 
-    - name: Download AppImage
-      run: |
-        wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
-        chmod 777 appimage.AppImage
+    # - name: Download AppImage
+    #   run: |
+    #     wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
+    #     chmod 777 appimage.AppImage
         
     - name: Download 3mf
       run: |
-        wget https://snapmaker-public-resource.s3.amazonaws.com/device/1/air_spinner.3mf -O air_spinner.3mf
+        wget "${{ github.event.inputs.slice-file }}"
         pwd
         ls -a
       env:
