@@ -1,0 +1,90 @@
+# This is a basic workflow to help you get started with Actions
+name: cloud-slice-v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      auth-token:
+        description: '上传用户的token'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 运行在最新的Ubuntu Linux环境中
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # 检出仓库代码
+
+    - name: Install GUI Dependency
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libgl1-mesa-glx \
+          libglu1-mesa \
+          libx11-6 \
+          libxext6 \
+          libxrender1 \
+          libxi6 \
+          libxtst6 \
+          libxt6 \
+          libxfixes3 \
+          libxrandr2 \
+          libasound2 \
+          libpango1.0-0 \
+          libatk1.0-0 \
+          libgtk-3-0 \
+          libgstreamer1.0-0 \
+          gstreamer1.0-plugins-base \
+          gstreamer1.0-plugins-good \
+          gstreamer1.0-plugins-bad \
+          gstreamer1.0-plugins-ugly \
+          libfuse-dev \
+          libegl1 \
+          libwebkit2gtk-4.0-37 \
+          xvfb \
+          at-spi2-core \
+          dbus-x11 \
+          imagemagick \
+
+    - name: Install and configure locales
+      run: |
+        sudo apt-get install -y locales
+        sudo locale-gen en_GB.UTF-8
+        sudo dpkg-reconfigure locales
+
+    - name: Start Xvfb
+      run: |
+        Xvfb :99 -screen 0 1024x768x24 &
+        echo "DISPLAY=:99" >> $GITHUB_ENV
+
+    - name: Setup Xauthority
+      run: |
+        touch $HOME/.Xauthority
+        xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
+
+    - name: Start AT-SPI Registry
+      run: |
+        echo "Starting AT-SPI Registry"
+        export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
+        dbus-launch --exit-with-session
+        echo "AT-SPI Registry started"
+
+    - name: Download AppImage
+      run: |
+        wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage  # 下载AppImage
+        chmod 777 appimage.AppImage  # 给AppImage执行权限
+
+    - name: Copy Config
+      run: |
+        mkdir -p ~/.config/Snapmaker_Orca
+        cp Snapmaker_Orca.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
+
+    - name: Run AppImage
+      run: |
+        ./appimage.AppImage /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/3DBenchy.3mf
+
+        cd /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/
+        ls -a
+      env:
+       DISPLAY: ":99"
