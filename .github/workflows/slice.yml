@@ -20,7 +20,6 @@ jobs:
       with:
         path: |
           /var/lib/apt/lists
-          /var/cache/apt/archives
         key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}
         restore-keys: |
           ${{ runner.os }}-apt-
@@ -29,13 +28,6 @@ jobs:
 
     - name: Install GUI Dependency & Locales
       run: |
-        sudo -E tar
-        if [ -f "/var/lib/apt/lists/lock" ]; then
-          sudo rm /var/lib/apt/lists/lock
-        fi
-        if [ -f "/var/cache/apt/archives/lock" ]; then
-          sudo rm /var/cache/apt/archives/lock
-        fi
         if [ "${{ steps.apt-cache.outputs.cache-hit }}" != "true" ]; then
         echo "Installing GUI Dependencies & locales..."
         sudo apt-get update
