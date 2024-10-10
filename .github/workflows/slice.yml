@@ -60,6 +60,7 @@ jobs:
             at-spi2-core \
             dbus-x11 \
             imagemagick
+        fi
 
     - name: Configure locales
       run: |
