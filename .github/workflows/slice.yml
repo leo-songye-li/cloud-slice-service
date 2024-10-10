@@ -23,7 +23,6 @@ jobs:
         key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}  # 生成唯一缓存键
         restore-keys: |
           ${{ runner.os }}-apt-
-        save-always: true
 
     - name: Install GUI Dependency & Locales
       run: |
