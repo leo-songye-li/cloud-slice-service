@@ -74,17 +74,23 @@ jobs:
       run: |
         wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage  # 下载AppImage
         chmod 777 appimage.AppImage  # 给AppImage执行权限
-
-    - name: Copy Config
+        
+    - name: Download 3mf
       run: |
-        mkdir -p ~/.config/Snapmaker_Orca
-        cp Snapmaker_Orca.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
-
-    - name: Run AppImage
-      run: |
-        ./appimage.AppImage /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/3DBenchy.3mf
-
-        cd /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/
+        wget https://snapmaker-public-resource.s3.amazonaws.com/device/1/air_spinner.3mf -O air_spinner.3mf
+        pwd
         ls -a
+
+    # - name: Copy Config
+    #   run: |
+    #     mkdir -p ~/.config/Snapmaker_Orca
+    #     cp default.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
+
+    # - name: Run AppImage
+    #   run: |
+    #     ./appimage.AppImage /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/3DBenchy.3mf
+
+    #     cd /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/
+    #     ls -a
       env:
        DISPLAY: ":99"
