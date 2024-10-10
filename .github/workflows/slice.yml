@@ -16,6 +16,14 @@ jobs:
       
     - name: Verify and set permissions
       run: |
+        if [ -d "/var/lib/apt/lists" ]; else
+          sudo mkdir /var/lib/apt/lists
+        fi
+        if [ -d "/var/cache/apt/archives" ]; else
+          sudo mkdir /var/cache/apt/archives
+        fi
+        sudo chown -R $USER:$USER /var/lib/apt/lists
+        sudo chown -R $USER:$USER /var/cache/apt/archives
         
     - name: Cache apt packages
       uses: actions/cache@v4.1.1
@@ -31,12 +39,6 @@ jobs:
 
     - name: Install GUI Dependency & Locales
       run: |
-        if [ -d "/var/lib/apt/lists" ]; else
-          sudo mkdir /var/lib/apt/lists
-        fi
-        if [ -d "/var/cache/apt/archives" ]; else
-          sudo mkdir /var/cache/apt/archives
-        fi
         if [ -f "/var/lib/apt/lists/lock" ]; then
           sudo rm /var/lib/apt/lists/lock
         fi
@@ -45,8 +47,6 @@ jobs:
         fi
         if [ "${{ steps.apt-cache.outputs.cache-hit }}" != "true" ]; then
         echo "Installing GUI Dependencies & locales..."
-        sudo chown -R $USER:$USER /var/lib/apt/lists
-        sudo chown -R $USER:$USER /var/cache/apt/archives
         sudo apt-get update
         sudo apt-get install -y \
           locales \
