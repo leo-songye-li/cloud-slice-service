@@ -31,10 +31,10 @@ jobs:
 
     - name: Install GUI Dependency & Locales
       run: |
-        if [ -d "/var/lib/apt/lists" ]; then
+        if [ -d "/var/lib/apt/lists" != "true" ]; then
           sudo mkdir /var/lib/apt/lists
         fi
-        if [ -d "/var/cache/apt/archives" ]; then
+        if [ -d "/var/cache/apt/archives" != "true" ]; then
           sudo mkdir /var/cache/apt/archives
         fi
         if [ -f "/var/lib/apt/lists/lock" ]; then
