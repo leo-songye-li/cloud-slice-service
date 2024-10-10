@@ -15,51 +15,54 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       
-    - name: Cache apt-get dependencies
+    - name: Cache apt packages
       uses: actions/cache@v4.1.1
-      id: cache-apt
       with:
-        path: /var/lib/apt/lists/
-        key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}  # 生成唯一缓存键
+        path: |
+          /var/lib/apt/lists
+          /var/cache/apt/archives
+        key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}
         restore-keys: |
           ${{ runner.os }}-apt-
 
     - name: Install GUI Dependency & Locales
       run: |
-        if [ "${{ steps.cache-apt.outputs.cache-hit }}" = "true" ]; then
-          echo "Apt dependencies cached, skipping installation"
-        else
-          echo "Installing GUI Dependencies & locales..."
-          sudo apt-get update
-          sudo apt-get install -y \
-            locales \
-            libgl1-mesa-glx \
-            libglu1-mesa \
-            libx11-6 \
-            libxext6 \
-            libxrender1 \
-            libxi6 \
-            libxtst6 \
-            libxt6 \
-            libxfixes3 \
-            libxrandr2 \
-            libasound2 \
-            libpango1.0-0 \
-            libatk1.0-0 \
-            libgtk-3-0 \
-            libgstreamer1.0-0 \
-            gstreamer1.0-plugins-base \
-            gstreamer1.0-plugins-good \
-            gstreamer1.0-plugins-bad \
-            gstreamer1.0-plugins-ugly \
-            libfuse-dev \
-            libegl1 \
-            libwebkit2gtk-4.0-37 \
-            xvfb \
-            at-spi2-core \
-            dbus-x11 \
-            imagemagick
+        if [ -f "/var/lib/apt/lists/lock" ]; then
+          sudo rm /var/lib/apt/lists/lock
         fi
+        if [ -f "/var/cache/apt/archives/lock" ]; then
+          sudo rm /var/cache/apt/archives/lock
+        fi
+        echo "Installing GUI Dependencies & locales..."
+        sudo apt-get update
+        sudo apt-get install -y \
+          locales \
+          libgl1-mesa-glx \
+          libglu1-mesa \
+          libx11-6 \
+          libxext6 \
+          libxrender1 \
+          libxi6 \
+          libxtst6 \
+          libxt6 \
+          libxfixes3 \
+          libxrandr2 \
+          libasound2 \
+          libpango1.0-0 \
+          libatk1.0-0 \
+          libgtk-3-0 \
+          libgstreamer1.0-0 \
+          gstreamer1.0-plugins-base \
+          gstreamer1.0-plugins-good \
+          gstreamer1.0-plugins-bad \
+          gstreamer1.0-plugins-ugly \
+          libfuse-dev \
+          libegl1 \
+          libwebkit2gtk-4.0-37 \
+          xvfb \
+          at-spi2-core \
+          dbus-x11 \
+          imagemagick
 
     - name: Configure locales
       run: |
