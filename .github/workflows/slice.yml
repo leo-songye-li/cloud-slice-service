@@ -1,4 +1,3 @@
-# This is a basic workflow to help you get started with Actions
 name: cloud-slice-v1
 
 on:
@@ -10,21 +9,25 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # 运行在最新的Ubuntu Linux环境中
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2  # 检出仓库代码
+      uses: actions/checkout@v2
       
     - name: Cache apt-get dependencies
       uses: actions/cache@v4.1.1
       id: cache-apt
       with:
-         save-always: true
-      
-    - name: Install GUI Dependency& Locales
+        path: /var/lib/apt/lists/
+        key: ${{ runner.os }}-apt-${{ hashFiles('apt-packages.txt') }}  # 生成唯一缓存键
+        restore-keys: |
+          ${{ runner.os }}-apt-
+        save-always: true
+
+    - name: Install GUI Dependency & Locales
       run: |
-        if [ "${cache-apt.outputs.cache-hit}" = "true" ]; then
+        if [ "${{ steps.cache-apt.outputs.cache-hit }}" = "true" ]; then
           echo "Apt dependencies cached, skipping installation"
         else
           echo "Installing GUI Dependencies & locales..."
@@ -56,7 +59,7 @@ jobs:
             xvfb \
             at-spi2-core \
             dbus-x11 \
-            imagemagick \
+            imagemagick
 
     - name: Configure locales
       run: |
@@ -82,25 +85,13 @@ jobs:
 
     - name: Download AppImage
       run: |
-        wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage  # 下载AppImage
-        chmod 777 appimage.AppImage  # 给AppImage执行权限
+        wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
+        chmod 777 appimage.AppImage
         
     - name: Download 3mf
       run: |
         wget https://snapmaker-public-resource.s3.amazonaws.com/device/1/air_spinner.3mf -O air_spinner.3mf
         pwd
         ls -a
-
-    # - name: Copy Config
-    #   run: |
-    #     mkdir -p ~/.config/Snapmaker_Orca
-    #     cp default.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
-
-    # - name: Run AppImage
-    #   run: |
-    #     ./appimage.AppImage /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/3DBenchy.3mf
-
-    #     cd /home/runner/work/Snapmaker_Engine/Snapmaker_Engine/
-    #     ls -a
       env:
-       DISPLAY: ":99"
+        DISPLAY: ":99"
