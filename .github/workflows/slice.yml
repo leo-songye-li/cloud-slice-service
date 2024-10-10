@@ -15,41 +15,49 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2  # 检出仓库代码
-
-    - name: Install GUI Dependency
+      
+    - name: Cache apt-get dependencies
+      uses: actions/cache@v4.1.1
+      id: cache-apt
+      
+    - name: Install GUI Dependency& Locales
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          libgl1-mesa-glx \
-          libglu1-mesa \
-          libx11-6 \
-          libxext6 \
-          libxrender1 \
-          libxi6 \
-          libxtst6 \
-          libxt6 \
-          libxfixes3 \
-          libxrandr2 \
-          libasound2 \
-          libpango1.0-0 \
-          libatk1.0-0 \
-          libgtk-3-0 \
-          libgstreamer1.0-0 \
-          gstreamer1.0-plugins-base \
-          gstreamer1.0-plugins-good \
-          gstreamer1.0-plugins-bad \
-          gstreamer1.0-plugins-ugly \
-          libfuse-dev \
-          libegl1 \
-          libwebkit2gtk-4.0-37 \
-          xvfb \
-          at-spi2-core \
-          dbus-x11 \
-          imagemagick \
+        if [ "${cache-apt.outputs.cache-hit}" = "true" ]; then
+          echo "Apt dependencies cached, skipping installation"
+        else
+          echo "Installing GUI Dependencies & locales..."
+          sudo apt-get update
+          sudo apt-get install -y \
+            locales \
+            libgl1-mesa-glx \
+            libglu1-mesa \
+            libx11-6 \
+            libxext6 \
+            libxrender1 \
+            libxi6 \
+            libxtst6 \
+            libxt6 \
+            libxfixes3 \
+            libxrandr2 \
+            libasound2 \
+            libpango1.0-0 \
+            libatk1.0-0 \
+            libgtk-3-0 \
+            libgstreamer1.0-0 \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            gstreamer1.0-plugins-bad \
+            gstreamer1.0-plugins-ugly \
+            libfuse-dev \
+            libegl1 \
+            libwebkit2gtk-4.0-37 \
+            xvfb \
+            at-spi2-core \
+            dbus-x11 \
+            imagemagick \
 
-    - name: Install and configure locales
+    - name: Configure locales
       run: |
-        sudo apt-get install -y locales
         sudo locale-gen en_GB.UTF-8
         sudo dpkg-reconfigure locales
 
