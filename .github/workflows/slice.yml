@@ -13,12 +13,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
-      
-    - name: Verify and set permissions
-      run: |
-        sudo -E actions/cache@v4.1.1 \
-          --id=cache-apt \
-          --path=/var/lib/apt/lists/ /var/cache/apt/archives/
         
     - name: Cache apt packages
       uses: actions/cache@v4.1.1
@@ -31,9 +25,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-apt-
         continue-on-error: true
+        
 
     - name: Install GUI Dependency & Locales
       run: |
+        sudo -E tar
         if [ -f "/var/lib/apt/lists/lock" ]; then
           sudo rm /var/lib/apt/lists/lock
         fi
@@ -73,37 +69,37 @@ jobs:
           imagemagick
         fi
 
-    - name: Configure locales
-      run: |
-        sudo locale-gen en_GB.UTF-8
-        sudo dpkg-reconfigure locales
+    # - name: Configure locales
+    #   run: |
+    #     sudo locale-gen en_GB.UTF-8
+    #     sudo dpkg-reconfigure locales
 
-    - name: Start Xvfb
-      run: |
-        Xvfb :99 -screen 0 1024x768x24 &
-        echo "DISPLAY=:99" >> $GITHUB_ENV
+    # - name: Start Xvfb
+    #   run: |
+    #     Xvfb :99 -screen 0 1024x768x24 &
+    #     echo "DISPLAY=:99" >> $GITHUB_ENV
 
-    - name: Setup Xauthority
-      run: |
-        touch $HOME/.Xauthority
-        xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
+    # - name: Setup Xauthority
+    #   run: |
+    #     touch $HOME/.Xauthority
+    #     xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
 
-    - name: Start AT-SPI Registry
-      run: |
-        echo "Starting AT-SPI Registry"
-        export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
-        dbus-launch --exit-with-session
-        echo "AT-SPI Registry started"
+    # - name: Start AT-SPI Registry
+    #   run: |
+    #     echo "Starting AT-SPI Registry"
+    #     export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
+    #     dbus-launch --exit-with-session
+    #     echo "AT-SPI Registry started"
 
-    - name: Download AppImage
-      run: |
-        wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
-        chmod 777 appimage.AppImage
+    # - name: Download AppImage
+    #   run: |
+    #     wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
+    #     chmod 777 appimage.AppImage
         
-    - name: Download 3mf
-      run: |
-        wget https://snapmaker-public-resource.s3.amazonaws.com/device/1/air_spinner.3mf -O air_spinner.3mf
-        pwd
-        ls -a
-      env:
-        DISPLAY: ":99"
+    # - name: Download 3mf
+    #   run: |
+    #     wget https://snapmaker-public-resource.s3.amazonaws.com/device/1/air_spinner.3mf -O air_spinner.3mf
+    #     pwd
+    #     ls -a
+    #   env:
+    #     DISPLAY: ":99"
