@@ -5,7 +5,7 @@ on:
     inputs:
       auth-token:
         description: '上传用户的token'
-        required: true
+        required: false
 
 jobs:
   build:
