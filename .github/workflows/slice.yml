@@ -19,7 +19,7 @@ jobs:
 
     - name: Echo masked slice-file
       run: |
-        echo "::add-mask::${{ inputs['slice-file'] }}"
+        echo "::add-mask::"
     - name: Echo slice-file
       run: echo "${{ inputs['slice-file'] }}"
       
