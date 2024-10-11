@@ -17,11 +17,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
 
-    - name: Mask sensitive file-url input
+    - name: Echo masked slice-file
       run: |
-        # 隐藏 file-url，使其不会在日志中显示
-        # $("::add-mask::${{ inputs['slice-file'] }}")
-        jq --help
+        echo "::add-mask::${ inputs['slice-file'] }"
+    - name: Echo  slice-file
+      run: echo "${inputs['slice-file']}"
+  
+    # - name: Mask sensitive file-url input
+    #   run: |
+    #     # 隐藏 file-url，使其不会在日志中显示
+    #     # $("::add-mask::${{ inputs['slice-file'] }}")
+    #     jq --help
     
     # - name: Cache apt packages
     #   uses: actions/cache@v4.1.1
