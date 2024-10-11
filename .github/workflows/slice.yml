@@ -20,7 +20,7 @@ jobs:
     - name: Mask sensitive file-url input
       run: |
         # 隐藏 file-url，使其不会在日志中显示
-        echo "::add-mask::${{ inputs.slice-file }}"
+        echo "::add-mask::${{ inputs['slice-file'] }}"
     
     - name: Cache apt packages
       uses: actions/cache@v4.1.1
