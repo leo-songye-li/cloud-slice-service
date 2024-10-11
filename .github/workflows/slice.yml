@@ -20,7 +20,6 @@ jobs:
     - name: Mask sensitive file-url input
       run: |
         # 隐藏 file-url，使其不会在日志中显示
-        echo '::echo::off'
         echo '::set-output name=action_echo::disabled'
         echo "::add-mask::${{ inputs['slice-file'] }}"
     
