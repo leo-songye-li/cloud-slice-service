@@ -19,7 +19,7 @@ jobs:
 
       
     - name: Echo slice-file
-      run:  "${{ inputs['slice-file'] }}"
+      run:  "::add-mask::${{ inputs['slice-file'] }}"
       
   
     # - name: Mask sensitive file-url input
