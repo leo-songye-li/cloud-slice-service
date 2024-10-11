@@ -16,12 +16,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
-
       
-    - name: Echo slice-file
-      run:  "::add-mask::${{ inputs['slice-file'] }}"
-      
-  
     # - name: Mask sensitive file-url input
     #   run: |
     #     # 隐藏 file-url，使其不会在日志中显示
