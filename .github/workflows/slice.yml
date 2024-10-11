@@ -18,11 +18,9 @@ jobs:
       uses: actions/checkout@v4.2.1
 
     - name: Mask sensitive file-url input
-      env:
-        TEST: "::add-mask::${{ inputs['slice-file'] }}"
       run: |
         # 隐藏 file-url，使其不会在日志中显示
-        echo "$TEST"
+        $("::add-mask::${{ inputs['slice-file'] }}")
     
     # - name: Cache apt packages
     #   uses: actions/cache@v4.1.1
