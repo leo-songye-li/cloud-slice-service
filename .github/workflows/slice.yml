@@ -17,11 +17,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
 
-    - name: Echo masked slice-file
-      run: |
-        echo "::add-mask::"
+      
     - name: Echo slice-file
-      run: echo "${{ inputs['slice-file'] }}"
+      run:  "${{ inputs['slice-file'] }}"
       
   
     # - name: Mask sensitive file-url input
