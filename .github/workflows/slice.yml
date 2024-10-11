@@ -16,7 +16,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
-        
+
+    - name: Mask sensitive file-url input
+      run: |
+        # 隐藏 file-url，使其不会在日志中显示
+        echo "::add-mask::${{ inputs.slice-file }}"
+    
     - name: Cache apt packages
       uses: actions/cache@v4.1.1
       id: apt-cache
@@ -107,7 +112,11 @@ jobs:
       run: |
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
         cd /home/runner/work/cloud-slice-service/cloud-slice-service/
-        ls -a
       env:
        DISPLAY: ":99"
+
+    - name: Save Gcode And Send Sync Msy
+      run: |
+        UPLOADE_FILE_PATH="${FILE_ABSOLUTE_PATH%.*}.gcode"
+        echo "$UPLOADE_FILE_PATH"
 
