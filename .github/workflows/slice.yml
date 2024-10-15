@@ -10,6 +10,10 @@ on:
         description: "回调路径"
         required: true
 
+env:
+  SRC_FILE: no
+  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,8 +26,8 @@ jobs:
        # 隐藏 slice-file 的值， 但不会在日志中打印出输入
     - name: Mask slice-file input
       run: |
-        echo "SRC_FILE=:no" >> $GITHUB_ENV
-        echo "::add-mask::$SRC_FILE"
+        # echo "::add-mask::$SRC_FILE"
+        echo "$SRC_FILE"
         sh start-slice.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }}
         echo "$SRC_FILE"
 
