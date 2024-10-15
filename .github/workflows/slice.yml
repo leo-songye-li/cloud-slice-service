@@ -23,7 +23,7 @@ jobs:
     - name: Mask slice-file input
       run: |
         echo "SRC_FILE=:" >> $GITHUB_ENV
-        # echo "::add-mask::$SRC_FILE"
+        echo "::add-mask::$SRC_FILE"
         sh start-slice.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }}
         echo "$SRC_FILE"
 
