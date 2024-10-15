@@ -9,11 +9,6 @@ on:
       callBack:
         description: "回调路径"
         required: true
-
-env:
-  SRC_FILE: no
-  
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +22,6 @@ jobs:
     - name: Mask slice-file input
       run: |
         # echo "::add-mask::$SRC_FILE"
-        echo "$SRC_FILE"
         sh start-slice.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }}
         echo "$SRC_FILE"
 
