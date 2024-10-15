@@ -3,11 +3,11 @@ name: cloud-slice-v1
 on:
   workflow_dispatch:
     inputs:
-    #   upload-token:
-    #     description: "用于获取预签名的key"
-    #     required: false
-      slice-file:
-        description: "需要云切片的文件名"
+      jobId:
+        description: "云切片任务Id"
+        required: true
+      callBack:
+        description: "回调路径"
         required: true
 
 jobs:
