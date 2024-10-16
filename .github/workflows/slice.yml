@@ -19,9 +19,12 @@ jobs:
        # 隐藏 slice-file 的值， 但不会在日志中打印出输入
     - name: Mask slice-file input
       run: |
-        chmod +x ./start-slice.sh
-        ./start-slice.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }}
-        echo "${SRC_FILE}"
+        SRC_FILE="1"
+        echo "::add-mask::$SRC_FILE"
+        # param_resp=$(curl "$CALLBACK?jobId=$JOB_ID&progress=1")
+        SRC_FILE="234"
+        echo "SRC_FILE=$SRC_FILE" >> $GITHUB_OUTPUT
+        echo "$SRC_FILE"
 
     # 使用 slice-file，但不会打印具体内容到日志
     - name: Use slice-file without logging it
