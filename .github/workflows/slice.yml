@@ -21,11 +21,12 @@ jobs:
       run: |
         chmod +x ./start-slice.sh
         ./start-slice.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }}
-        echo "${env.SRC_FILE}"
+
 
     # 使用 slice-file，但不会打印具体内容到日志
     - name: Use slice-file without logging it
       run: |
+        echo "${{ env[SRC_FILE] }}"
         echo "Processing slice file...$SRC_FILE"
 
     
