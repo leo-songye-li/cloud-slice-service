@@ -19,6 +19,7 @@ jobs:
        # 隐藏 slice-file 的值， 但不会在日志中打印出输入
     - name: Mask slice-file input
       run: |
+        chmod 777 start-slice.sh
         ./start-slice.sh "${{ inputs['jobId'] }}" "${{ inputs['callBack'] }}"
         echo "${SRC_FILE}"
 
