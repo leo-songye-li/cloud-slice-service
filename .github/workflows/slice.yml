@@ -16,8 +16,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
 
-
-
        # 隐藏 slice-file 的值， 但不会在日志中打印出输入
     - name: Mask slice-file input
       run: |
@@ -29,14 +27,8 @@ jobs:
     - name: Use slice-file without logging it
       run: |
         echo "Processing slice file...$SRC_FILE"
-        # some_command "${{ inputs['jobId'] }}"
 
-    # 使用 slice-file，但不会打印具体内容到日志
-    - name: Use slice-file without logging it
-      run: |
-        echo "Processing slice file...${{ inputs['jobId'] }}"
-        some_command "${{ inputs['jobIde'] }}"
-      
+    
     # - name: Mask sensitive file-url input
     #   run: |
     #     # 隐藏 file-url，使其不会在日志中显示
