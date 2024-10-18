@@ -20,10 +20,8 @@ jobs:
     - name: sync slice status
       run: |
         chmod +x ./sync-slice-status.sh
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 0
-    
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 1
 
-        
     - name: Install GUI Dependency & Locales
       run: |
         echo "Installing GUI Dependencies & locales..."
