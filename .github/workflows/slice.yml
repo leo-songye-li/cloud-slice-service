@@ -126,7 +126,7 @@ jobs:
 
     - name: Upload files to S3
       run: |
-        aws s3 cp ${{ $UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
+        aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
 
     # - name: Upload to S3
     #   uses: shallwefootball/upload-s3-action@v1.3.3
