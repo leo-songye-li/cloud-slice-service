@@ -101,7 +101,6 @@ jobs:
         wget "${{ inputs['slice-file'] }}" -O "$FILE_NAME"
         ABSOLUTE_PATH=$(realpath "$FILE_NAME")
         echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
-        echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
         
     - name: Copy Config
       run: |
@@ -126,10 +125,10 @@ jobs:
         # aws bucket name
         aws_bucket: ${{ secret.AWS_BUCKET }}
         # directory to upload
-        source_dir: $UPLOADE_FILE_PATH
+        source_dir: ./$UPLOADE_FILE_PATH
         destination_dir: ${{ secret.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
         
-    - name: Finish slice
-      run: |
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 100 $UPLOADE_FILE_NAME
+    # - name: Finish slice
+    #   run: |
+    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 100 $UPLOADE_FILE_NAME
 
