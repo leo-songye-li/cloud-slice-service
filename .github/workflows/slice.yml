@@ -54,14 +54,14 @@ jobs:
           at-spi2-core \
           dbus-x11 \
           imagemagick
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 20
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 20 "$SRC_FILE"
         
 
     - name: Configure locales
       run: |
         sudo locale-gen en_GB.UTF-8
         sudo dpkg-reconfigure locales
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 30
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 30 "$SRC_FILE"
 
     - name: Start Xvfb
       run: |
@@ -72,7 +72,7 @@ jobs:
       run: |
         touch $HOME/.Xauthority
         xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 40
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 40 "$SRC_FILE"
 
     - name: Start AT-SPI Registry
       run: |
@@ -80,13 +80,13 @@ jobs:
         export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
         dbus-launch --exit-with-session
         echo "AT-SPI Registry started"
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 50
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 50 "$SRC_FILE"
 
     - name: Download AppImage
       run: |
         wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
         chmod 777 appimage.AppImage
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 60
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 60 "$SRC_FILE"
         
     - name: Download 3mf
       run: |
@@ -94,7 +94,7 @@ jobs:
         wget "$SRC_FILE" -O "$FILE_NAME"
         ABSOLUTE_PATH=$(realpath "$FILE_NAME")
         echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 70
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 70 "$SRC_FILE"
         
     - name: Copy Config
       run: |
@@ -106,7 +106,7 @@ jobs:
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
         UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
         echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 80
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 80 "$SRC_FILE"
       env:
        DISPLAY: ":99"
 
@@ -123,5 +123,5 @@ jobs:
 
     - name: Finish slice
       run: |
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 100 $(basename $UPLOAD_FILE_PATH)
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 100 $(basename $UPLOAD_FILE_PATH) "$SRC_FILE"
 
