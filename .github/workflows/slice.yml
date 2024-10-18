@@ -127,7 +127,7 @@ jobs:
         # aws bucket name
         aws_bucket: ${{ secrets.AWS_BUCKET }}
         # directory to upload
-        source_dir: ./"$UPLOAD_FILE_PATH"
+        source_dir: ./${UPLOAD_FILE_PATH}
         destination_dir: ${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
         
     # - name: Finish slice
