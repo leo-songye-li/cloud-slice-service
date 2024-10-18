@@ -111,9 +111,7 @@ jobs:
       run: |
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
         UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
-        # mkdir ${{ inputs['jobId'] }}
-        # cp $UPLOAD_FILE_NAME ${{ inputs['jobId'] }}
-         echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
+        echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
       env:
        DISPLAY: ":99"
 
@@ -128,20 +126,7 @@ jobs:
       run: |
         aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
 
-    # - name: Upload to S3
-    #   uses: shallwefootball/upload-s3-action@v1.3.3
-    #   with:
-    #     # aws key id
-    #     aws_key_id: ${{ secrets.AWS_ACCESS_ID }}
-    #     # aws secret access key
-    #     aws_secret_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-    #     # aws bucket name
-    #     aws_bucket: ${{ secrets.AWS_BUCKET }}
-    #     # directory to upload
-    #     source_dir: ./${{ inputs['jobId'] }}
-    #     destination_dir: ${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
-        
-    # - name: Finish slice
-    #   run: |
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 100 $UPLOADE_FILE_NAME
+    - name: Finish slice
+      run: |
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 100 $(basename $UPLOAD_FILE_PATH)
 
