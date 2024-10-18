@@ -112,7 +112,7 @@ jobs:
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
         UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
         echo "${FILE_ABSOLUTE_PATH%.*}.gcode"
-        echo UPLOAD_FILE_NAME
+        echo $UPLOAD_FILE_NAME
         echo "UPLOAD_FILE_PATH=$UPLOADE_FILE_NAME" >> $GITHUB_ENV
       env:
        DISPLAY: ":99"
