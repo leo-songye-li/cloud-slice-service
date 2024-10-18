@@ -110,8 +110,8 @@ jobs:
     - name: Run AppImage
       run: |
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
-        UPLOADE_FILE_PATH="${FILE_ABSOLUTE_PATH%.*}.gcode"
-        echo "UPLOADE_FILE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
+        UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
+        echo "UPLOAD_FILE_PATH=$UPLOADE_FILE_NAME" >> $GITHUB_ENV
       env:
        DISPLAY: ":99"
        
@@ -125,7 +125,7 @@ jobs:
         # aws bucket name
         aws_bucket: ${{ secrets.AWS_BUCKET }}
         # directory to upload
-        source_dir: ./$UPLOADE_FILE_PATH
+        source_dir: ./"$UPLOAD_FILE_PATH"
         destination_dir: ${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
         
     # - name: Finish slice
