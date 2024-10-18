@@ -2,12 +2,12 @@
 JOB_ID=$1
 CALLBACK=$2
 PROGRESS=$3
-FILENAME=$4
+SRC_FILE=$4
 PARAM=""
 
 if [ -n "$4" ]; then
     if [ "$PROGRESS" -eq "100" ]; then
-        PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS , \"file\": \"$FILENAME\" }"
+        PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS , \"file\": \"$SRC_FILE\" }"
     fi
 else
     PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS }"
