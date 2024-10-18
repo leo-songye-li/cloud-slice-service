@@ -18,7 +18,7 @@ code=$(echo $param_resp | jq -r .code)
 if [ $code -eq "200" ]; then
     if [ -z "$SRC_FILE" ]; then
         SRC=$(echo $param_resp | jq -r .data.src)
-        echo "::add-mask::$SRC"
+        # echo "::add-mask::$SRC"
         echo "SRC_FILE=$SRC" >> $GITHUB_ENV
     else
         echo "$SRC_FILE"
