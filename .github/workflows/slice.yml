@@ -97,8 +97,8 @@ jobs:
         
     - name: Download 3mf
       run: |
-        FILE_NAME=$(basename "${{ inputs['slice-file'] }}")
-        wget "${{ inputs['slice-file'] }}" -O "$FILE_NAME"
+        FILE_NAME=$(basename "$SRC_FILE")
+        wget "$SRC_FILE" -O "$FILE_NAME"
         ABSOLUTE_PATH=$(realpath "$FILE_NAME")
         echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
         
