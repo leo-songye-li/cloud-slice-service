@@ -112,7 +112,7 @@ jobs:
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
         UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
         mkdir ${{ inputs['jobId'] }}
-        cp UPLOAD_FILE_NAME ${{ inputs['jobId'] }}
+        cp $UPLOAD_FILE_NAME ${{ inputs['jobId'] }}
       env:
        DISPLAY: ":99"
 
