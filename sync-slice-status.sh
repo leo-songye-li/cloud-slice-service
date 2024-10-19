@@ -26,7 +26,7 @@ if [ $code -eq "200" ]; then
             res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": $PROGRESS,\"error\": \"Resp Src Is Null\"}" $CALLBACK)
             exit 1
         else
-            # echo "::add-mask::$SRC"
+            echo "::add-mask::$SRC"
             echo "SRC_FILE=$SRC" >> $GITHUB_ENV
         fi
     else
