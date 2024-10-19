@@ -120,8 +120,9 @@ jobs:
 
     - name: Upload files to S3
       run: |
-        AWS_MSG=$(aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }})
-        echo "$AWS_MSG"
+        UPLOAD_FILE_NAME=$(basename "$UPLOAD_FILE_PATH")
+        AWS_MSG=$(aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId']/"${UPLOAD_FILE_NAME}" }})
+        echo "aaa $AWS_MSG"
         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
         
 
