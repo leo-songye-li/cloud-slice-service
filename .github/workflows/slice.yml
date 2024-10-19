@@ -90,9 +90,16 @@ jobs:
       run: |
         FILE_NAME=$(basename "$SRC_FILE")
         wget "$SRC_FILE" -O "$FILE_NAME"
-        ABSOLUTE_PATH=$(realpath "$FILE_NAME")
-        echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 60
+        DOWN_CODE=$?
+        if [ $DOWN_CODE -ne 0 ]; then
+           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} "Download Model Failed."
+          exit 1
+        else
+          ABSOLUTE_PATH=$(realpath "$FILE_NAME")
+          echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
+          ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 60
+        fi
+         
         
     - name: Copy Config
       run: |
@@ -119,7 +126,13 @@ jobs:
     - name: Upload files to S3
       run: |
         aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
-         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 90
+        UP_CODE=$?
+        if [ $UP_CODE -ne 0 ]; then
+           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} "Save Slice Response Failed."
+           exit 1
+        else
+          ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ inputs['callBack'] }} 90
+        fi
 
     - name: Finish slice
       run: |
