@@ -10,128 +10,124 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    # - name: Checkout repository
-    #   uses: actions/checkout@v4.2.1
+    - name: Checkout repository
+      uses: actions/checkout@v4.2.1
 
-       # 隐藏 slice-file 的值， 但不会在日志中打印出输入
-    # - name: sync slice status
-    #   run: |
-    #     chmod +x ./sync-slice-status.sh
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 1
+       隐藏 slice-file 的值， 但不会在日志中打印出输入
+    - name: sync slice status
+      run: |
+        chmod +x ./sync-slice-status.sh
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 1
 
-    # - name: Install GUI Dependency & Locales
-    #   run: |
-    #     echo "Installing GUI Dependencies & locales..."
-    #     sudo apt-get update
-    #     sudo apt-get install -y \
-    #       locales \
-    #       libgl1-mesa-glx \
-    #       libglu1-mesa \
-    #       libx11-6 \
-    #       libxext6 \
-    #       libxrender1 \
-    #       libxi6 \
-    #       libxtst6 \
-    #       libxt6 \
-    #       libxfixes3 \
-    #       libxrandr2 \
-    #       libasound2 \
-    #       libpango1.0-0 \
-    #       libatk1.0-0 \
-    #       libgtk-3-0 \
-    #       libgstreamer1.0-0 \
-    #       gstreamer1.0-plugins-base \
-    #       gstreamer1.0-plugins-good \
-    #       gstreamer1.0-plugins-bad \
-    #       gstreamer1.0-plugins-ugly \
-    #       libfuse-dev \
-    #       libegl1 \
-    #       libwebkit2gtk-4.0-37 \
-    #       xvfb \
-    #       at-spi2-core \
-    #       dbus-x11 \
-    #       imagemagick
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 10
+    - name: Install GUI Dependency & Locales
+      run: |
+        echo "Installing GUI Dependencies & locales..."
+        sudo apt-get update
+        sudo apt-get install -y \
+          locales \
+          libgl1-mesa-glx \
+          libglu1-mesa \
+          libx11-6 \
+          libxext6 \
+          libxrender1 \
+          libxi6 \
+          libxtst6 \
+          libxt6 \
+          libxfixes3 \
+          libxrandr2 \
+          libasound2 \
+          libpango1.0-0 \
+          libatk1.0-0 \
+          libgtk-3-0 \
+          libgstreamer1.0-0 \
+          gstreamer1.0-plugins-base \
+          gstreamer1.0-plugins-good \
+          gstreamer1.0-plugins-bad \
+          gstreamer1.0-plugins-ugly \
+          libfuse-dev \
+          libegl1 \
+          libwebkit2gtk-4.0-37 \
+          xvfb \
+          at-spi2-core \
+          dbus-x11 \
+          imagemagick
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 10
         
 
-    # - name: Configure locales
-    #   run: |
-    #     sudo locale-gen en_GB.UTF-8
-    #     sudo dpkg-reconfigure locales
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 20
-    # - name: Start Xvfb
-    #   run: |
-    #     Xvfb :99 -screen 0 1024x768x24 &
-    #     echo "DISPLAY=:99" >> $GITHUB_ENV
+    - name: Configure locales
+      run: |
+        sudo locale-gen en_GB.UTF-8
+        sudo dpkg-reconfigure locales
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 20
+    - name: Start Xvfb
+      run: |
+        Xvfb :99 -screen 0 1024x768x24 &
+        echo "DISPLAY=:99" >> $GITHUB_ENV
 
-    # - name: Setup Xauthority
-    #   run: |
-    #     touch $HOME/.Xauthority
-    #     xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 30
+    - name: Setup Xauthority
+      run: |
+        touch $HOME/.Xauthority
+        xauth nlist $DISPLAY | xauth -f $HOME/.Xauthority nmerge -
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 30
 
-    # - name: Start AT-SPI Registry
-    #   run: |
-    #     echo "Starting AT-SPI Registry"
-    #     export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
-    #     dbus-launch --exit-with-session
-    #     echo "AT-SPI Registry started"
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 40
-    # - name: Download AppImage
-    #   run: |
-    #     wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
-    #     chmod 777 appimage.AppImage
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 50
+    - name: Start AT-SPI Registry
+      run: |
+        echo "Starting AT-SPI Registry"
+        export XDG_SESSION_COOKIE=`xauth list|grep .$DISPLAY|cut -d' ' -f1`
+        dbus-launch --exit-with-session
+        echo "AT-SPI Registry started"
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 40
+    - name: Download AppImage
+      run: |
+        wget https://github.com/Snapmaker/OrcaSlicer/releases/download/nightlybuild/Snapmaker_Orca_Engine_Linux_V0.0.1.AppImage -O appimage.AppImage
+        chmod 777 appimage.AppImage
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 50
         
     - name: Download 3mf
       run: |
-        HTTP_STATUS=$(curl -o "3DBenchy.3mf" -w "%{http_code}" -s "https://snapmaker-public-resource.s3.amazonaws.com/test/3DBenchy.3mf")
 
-        echo "aaaaa   $HTTP_STATUS"
-        # FILE_NAME=$(basename "$SRC_FILE")
-        # wget "$SRC_FILE" -O "$FILE_NAME"
+        FILE_NAME=$(basename "$SRC_FILE")
+    
+        HTTP_STATUS=$(curl -o "$FILE_NAME" -w "%{http_code}" -s "$SRC_FILE")
+        if [ $HTTP_STATUS -ne 0 ]; then
+          ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} "Download Model Failed."
+          exit 1
+        fi
         
-        # ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} "Download Model Failed."
-        # exit 1
+        ABSOLUTE_PATH=$(realpath "$FILE_NAME")
+        echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 60
         
-        # ABSOLUTE_PATH=$(realpath "$FILE_NAME")
-        # echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
-        # ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 60
+    - name: Copy Config
+      run: |
+        mkdir -p ~/.config/Snapmaker_Orca
+        cp default.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
+         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 70
+
+    - name: Run AppImage
+      run: |
+        ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
+        UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
+        echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 80
+      env:
+       DISPLAY: ":99"
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ secrets.AWS_REGION }}                
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}             
+        aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+
+    - name: Upload files to S3
+      run: |
+        AWS_MSG=aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
+        echo $AWS_MSG
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
         
-    # - name: Copy Config
-    #   run: |
-    #     mkdir -p ~/.config/Snapmaker_Orca
-    #     cp default.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
-    #      ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 70
 
-    # - name: Run AppImage
-    #   run: |
-    #     ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
-    #     UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
-    #     echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 80
-    #   env:
-    #    DISPLAY: ":99"
-
-    # - name: Configure AWS Credentials
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   with:
-    #     aws-region: ${{ secrets.AWS_REGION }}                
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}             
-    #     aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
-
-    # - name: Upload files to S3
-    #   run: |
-    #     aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
-    #     UP_CODE=$?
-    #     if [ $UP_CODE -ne 0 ]; then
-    #        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} "Save Slice Response Failed."
-    #        exit 1
-    #     else
-    #       ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
-    #     fi
-
-    # - name: Finish slice
-    #   run: |
-    #     ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 100 $(basename $UPLOAD_FILE_PATH)
+    - name: Finish slice
+      run: |
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 100 $(basename $UPLOAD_FILE_PATH)
 
