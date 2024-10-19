@@ -97,7 +97,6 @@ jobs:
           echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 60
         fi
-        set -e
          
         
     - name: Copy Config
@@ -133,7 +132,6 @@ jobs:
         else
           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
         fi
-        set -e
 
     - name: Finish slice
       run: |
