@@ -18,8 +18,12 @@ code=$(echo $param_resp | jq -r .code)
 if [ $code -eq "200" ]; then
     if [ -z "$SRC_FILE" ]; then
         SRC=$(echo $param_resp | jq -r .data.src)
-        # echo "::add-mask::$SRC"
-        echo "SRC_FILE=$SRC" >> $GITHUB_ENV
+        if [ -z "$SRC_FILE" ]; then
+            res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": $PROGRESS,\"error\": \"Resp Src Is Null,CODE=$code,Msg=$error\"}" $CALLBACK)
+        else
+            # echo "::add-mask::$SRC"
+            echo "SRC_FILE=$SRC" >> $GITHUB_ENV
+        fi
     else
         echo "$SRC_FILE"
     fi
