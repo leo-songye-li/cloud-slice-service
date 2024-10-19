@@ -8,7 +8,7 @@ PARAM=""
 if [ -n "$FILE_NAME" ]; then
     if ! [[ "$PROGRESS" =~ ^[0-9]+$ ]]; then
         res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": -1,\"error\": \"$PROGRESS\"}" $CALLBACK)
-        exit -1
+        exit 1
     fi
     if [ "$PROGRESS" -eq "100" ]; then
         PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS , \"file\": \"$FILE_NAME\" }"
@@ -34,6 +34,6 @@ if [ $code -eq "200" ]; then
 else
     error=$(echo $param_resp | jq -r .msg)
     res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": $PROGRESS,\"error\": \"Get src failed,CODE=$code,Msg=$error\"}" $CALLBACK)
-    exit -1
+    exit 1
 fi
 exit 0
