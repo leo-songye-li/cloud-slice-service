@@ -12,6 +12,7 @@ fi
 if [ -n "$FILE_NAME" ]; then
     if [ "$PROGRESS" -eq "100" ]; then
         PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS , \"file\": \"$FILE_NAME\" }"
+        echo "$PARAM"
     fi
 else
     PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS }"
