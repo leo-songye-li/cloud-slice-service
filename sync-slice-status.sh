@@ -6,6 +6,10 @@ FILE_NAME=$4
 PARAM=""
 
 if [ -n "$FILE_NAME" ]; then
+    if ! [[ "$PROGRESS" =~ ^[0-9]+$ ]]; then
+        res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": -1,\"error\": \"$PROGRESS\"}" $CALLBACK)
+        exit -1
+    fi
     if [ "$PROGRESS" -eq "100" ]; then
         PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS , \"file\": \"$FILE_NAME\" }"
     fi
