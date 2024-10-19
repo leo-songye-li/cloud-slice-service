@@ -84,11 +84,10 @@ jobs:
         
     - name: Download 3mf
       run: |
-
         FILE_NAME=$(basename "$SRC_FILE")
-    
         HTTP_STATUS=$(curl -o "$FILE_NAME" -w "%{http_code}" -s "$SRC_FILE")
-        if [ $HTTP_STATUS -ne 0 ]; then
+        echo "$HTTP_STATUS"
+        if [ "$HTTP_STATUS" -ne "0" ]; then
           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} "Download Model Failed."
           exit 1
         fi
