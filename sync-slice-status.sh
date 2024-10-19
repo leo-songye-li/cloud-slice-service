@@ -22,7 +22,7 @@ code=$(echo $param_resp | jq -r .code)
 if [ $code -eq "200" ]; then
     if [ -z "$SRC_FILE" ]; then
         SRC=$(echo $param_resp | jq -r .data.src)
-        if [ -z "$SRC_FILE" ]; then
+        if [ -z "$SRC" ]; then
             res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": $PROGRESS,\"error\": \"Resp Src Is Null\"}" $CALLBACK)
             exit 1
         else
