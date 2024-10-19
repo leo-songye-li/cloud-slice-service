@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4.2.1
+    # - name: Checkout repository
+    #   uses: actions/checkout@v4.2.1
 
        # 隐藏 slice-file 的值， 但不会在日志中打印出输入
     # - name: sync slice status
@@ -86,7 +86,7 @@ jobs:
     - name: Download 3mf
       run: |
         test = $(wget "https://snapmaker-public-resource.s3.amazonaws.com/test/3DBenchy.3mf" -O "3DBenchy.3mf")
-        echo "$test"
+        echo "aaaaa   $test"
         
         # FILE_NAME=$(basename "$SRC_FILE")
         # wget "$SRC_FILE" -O "$FILE_NAME"
