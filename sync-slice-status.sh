@@ -24,6 +24,7 @@ if [ $code -eq "200" ]; then
         SRC=$(echo $param_resp | jq -r .data.src)
         if [ -z "$SRC_FILE" ]; then
             res=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\":\"$JOB_ID\",\"progress\": $PROGRESS,\"error\": \"Resp Src Is Null\"}" $CALLBACK)
+            exit 1
         else
             echo "::add-mask::$SRC"
             echo "SRC_FILE=$SRC" >> $GITHUB_ENV
