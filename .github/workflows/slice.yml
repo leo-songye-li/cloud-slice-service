@@ -13,7 +13,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.2.1
 
-       隐藏 slice-file 的值， 但不会在日志中打印出输入
     - name: sync slice status
       run: |
         chmod +x ./sync-slice-status.sh
