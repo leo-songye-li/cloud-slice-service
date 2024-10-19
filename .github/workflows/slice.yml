@@ -87,17 +87,13 @@ jobs:
       run: |
         set +e
         FILE_NAME=$(basename "$SRC_FILE")
-        wget "$SRC_FILE" -O "$FILE_NAME"
-        DOWN_CODE=$?
-        if [ $DOWN_CODE -ne 0 ]; then
-           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} "Download Model Failed."
+        wget "$SRC_FILE" -O "$FILE_NAME" || {
+          ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} "Download Model Failed."
           exit 1
-        else
-          ABSOLUTE_PATH=$(realpath "$FILE_NAME")
-          echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
-          ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 60
-        fi
-         
+        }
+        ABSOLUTE_PATH=$(realpath "$FILE_NAME")
+        echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 60
         
     - name: Copy Config
       run: |
