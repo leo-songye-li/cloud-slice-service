@@ -85,6 +85,7 @@ jobs:
         
     - name: Download 3mf
       run: |
+        set +e
         FILE_NAME=$(basename "$SRC_FILE")
         wget "$SRC_FILE" -O "$FILE_NAME"
         DOWN_CODE=$?
@@ -96,6 +97,7 @@ jobs:
           echo "FILE_ABSOLUTE_PATH=$ABSOLUTE_PATH" >> $GITHUB_ENV
           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 60
         fi
+        set -e
          
         
     - name: Copy Config
@@ -122,6 +124,7 @@ jobs:
 
     - name: Upload files to S3
       run: |
+        set +e
         aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}
         UP_CODE=$?
         if [ $UP_CODE -ne 0 ]; then
@@ -130,6 +133,7 @@ jobs:
         else
           ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
         fi
+        set -e
 
     - name: Finish slice
       run: |
