@@ -106,7 +106,9 @@ jobs:
       run: |
         ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
         UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
+        UPLOAD_FILE_BASE_NAME=$(basename "$UPLOAD_FILE_NAME")
         echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
+        echo "UPLOAD_BASE_NAME=$UPLOAD_FILE_BASE_NAME" >> $GITHUB_ENV
         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 80
       env:
        DISPLAY: ":99"
@@ -120,13 +122,12 @@ jobs:
 
     - name: Upload files to S3
       run: |
-        UPLOAD_FILE_NAME=$(basename "$UPLOAD_FILE_PATH")
-        AWS_MSG=$(aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}/$UPLOAD_FILE_NAME)
+        AWS_MSG=$(aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}/${{ env.UPLOAD_BASE_NAME }} )
         echo "bbb $AWS_MSG"
         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
         
 
     - name: Finish slice
       run: |
-        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 100 $(basename "$UPLOAD_FILE_PATH")
+        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 100 ${{ env.UPLOAD_BASE_NAME }}
 
