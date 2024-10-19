@@ -18,7 +18,7 @@ else
     PARAM="{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS }"
 fi
 
-param_resp=$(curl -X POST -H "Content-Type: application/json" -d "{\"jobId\": \"$JOB_ID\", \"progress\": $PROGRESS}" $CALLBACK)
+param_resp=$(curl -X POST -H "Content-Type: application/json" -d "$PARAM" $CALLBACK)
 code=$(echo $param_resp | jq -r .code)
 if [ $code -eq "200" ]; then
     if [ -z "$SRC_FILE" ]; then
