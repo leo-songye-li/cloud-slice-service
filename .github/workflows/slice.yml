@@ -122,7 +122,7 @@ jobs:
       run: |
         UPLOAD_FILE_NAME=$(basename "$UPLOAD_FILE_PATH")
         echo "aaa $UPLOAD_FILE_NAME"
-        AWS_MSG=$(aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId']/$UPLOAD_FILE_NAME }})
+        AWS_MSG=$(aws s3 cp ${{ env.UPLOAD_FILE_PATH }} s3://${{ secrets.AWS_BUCKET }}/${{ secrets.AWS_SLICE_DIR }}/${{ inputs['jobId'] }}/$UPLOAD_FILE_NAME)
         echo "bbb $AWS_MSG"
         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 90
         
