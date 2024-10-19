@@ -85,9 +85,10 @@ jobs:
         
     - name: Download 3mf
       run: |
-        test = $(wget "https://snapmaker-public-resource.s3.amazonaws.com/test/3DBenchy.3mf" -O "3DBenchy.3mf")
+        test = $(wget "https://snapmaker-public-resource.s3.amazonaws.com/test/3DBenchy.3mf" -O "3DBenchy.3mf" 2>&1)
+        STATUS=$? 
         echo "aaaaa   $test"
-        
+        echo "BBB   $STATUS"
         # FILE_NAME=$(basename "$SRC_FILE")
         # wget "$SRC_FILE" -O "$FILE_NAME"
         
