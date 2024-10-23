@@ -6,7 +6,7 @@ on:
       jobId:
         description: "云切片任务Id"
         required: true
-      callback:
+      callBack:
         description: "回调路径"
         required: false
 jobs:
