@@ -6,6 +6,9 @@ on:
       jobId:
         description: "云切片任务Id"
         required: true
+      callback:
+        description: "回调路径"
+        required: false
 jobs:
   build:
     runs-on: ubuntu-latest
