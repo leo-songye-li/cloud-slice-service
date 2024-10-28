@@ -105,9 +105,20 @@ jobs:
         cp default.conf ~/.config/Snapmaker_Orca/Snapmaker_Orca.conf
          ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 70
 
+#    - name: Run AppImage
+#      run: |
+#        ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
+#        UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
+#        UPLOAD_FILE_BASE_NAME=$(basename "$UPLOAD_FILE_NAME")
+#        echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
+#        echo "UPLOAD_BASE_NAME=$UPLOAD_FILE_BASE_NAME" >> $GITHUB_ENV
+#        ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 80
+#      env:
+#       DISPLAY: ":99"
+
     - name: Run AppImage
       run: |
-        ./appimage.AppImage "$FILE_ABSOLUTE_PATH"
+        ./appimage.AppImage "$FILE_ABSOLUTE_PATH" & APPIMAGE_PID=$!
         UPLOAD_FILE_NAME="${FILE_ABSOLUTE_PATH%.*}.gcode"
         UPLOAD_FILE_BASE_NAME=$(basename "$UPLOAD_FILE_NAME")
         echo "UPLOAD_FILE_PATH=$UPLOAD_FILE_NAME" >> $GITHUB_ENV
@@ -115,6 +126,29 @@ jobs:
         ./sync-slice-status.sh ${{ inputs['jobId'] }} ${{ secrets.SLICE_CALLBACK }} 80
       env:
        DISPLAY: ":99"
+
+    - name: Capture Screenshots
+      run: |
+        for i in {1..10}; do
+          sleep 2  # Capture a screenshot every 5 seconds
+          import -display :99 -window root /home/runner/work/screenshot_$i.png
+          echo "Screenshot $i captured"
+        done
+    
+    - name: Gracefully stop the AppImage
+      run: |
+       if [ -n "$APPIMAGE_PID" ]; then
+         kill $APPIMAGE_PID
+        else
+          echo "PID not found, cannot kill the AppImage process."
+        fi
+
+    - name: Upload Screenshots
+      uses: actions/upload-artifact@v3
+      with:
+        name: Screenshots
+        path: /home/runner/work/screenshot_*.png
+
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
