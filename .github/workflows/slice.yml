@@ -118,8 +118,8 @@ jobs:
 
     - name: Capture Screenshots
       run: |
-        for i in {1..50}; do
-          sleep 2  # Capture a screenshot every 5 seconds
+        for i in {1..100}; do
+          select -t 0.2  # Capture a screenshot every 5 seconds
           import -display :99 -window root /home/runner/work/screenshot_$i.png
           echo "Screenshot $i captured"
         done
